@@ -33,13 +33,12 @@ bool AlekseevAMinDistNeighElemVecMPI::RunImpl() {
 
   const auto &vec = GetInput();
 
-
   int local_index = rank;
   int local_dist = std::numeric_limits<int>::max();
 
-  for(int i = rank; i < static_cast<int>(vec.size()) - 1; i += comm_size){
+  for (int i = rank; i < static_cast<int>(vec.size()) - 1; i += comm_size) {
     int value = std::abs(vec[i] - vec[i + 1]);
-    if(local_dist > value){
+    if (local_dist > value) {
       local_dist = value;
       local_index = i;
     }
@@ -64,4 +63,4 @@ bool AlekseevAMinDistNeighElemVecMPI::PostProcessingImpl() {
   return true;
 }
 
-} // namespace alekseev_a_min_dist_neigh_elem_vec
+}  // namespace alekseev_a_min_dist_neigh_elem_vec

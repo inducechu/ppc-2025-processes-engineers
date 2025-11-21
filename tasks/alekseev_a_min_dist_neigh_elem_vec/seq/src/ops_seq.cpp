@@ -28,9 +28,9 @@ bool AlekseevAMinDistNeighElemVecSEQ::RunImpl() {
 
   int index = 0;
   int index_value = std::numeric_limits<int>::max();
-  for(int i = 0; i < static_cast<int>(vec.size()) - 1; i++){
+  for (int i = 0; i < static_cast<int>(vec.size()) - 1; i++) {
     int value = std::abs(vec[i] - vec[i + 1]);
-    if(value < index_value){
+    if (value < index_value) {
       index = i;
       index_value = value;
     }
