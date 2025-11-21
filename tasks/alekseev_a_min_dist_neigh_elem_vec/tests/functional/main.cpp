@@ -17,7 +17,8 @@
 
 namespace alekseev_a_min_dist_neigh_elem_vec {
 
-class AlekseevAMinDistNeighElemVecRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InType, OutType, TestType> {
+class AlekseevAMinDistNeighElemVecRunFuncTestsProcesses
+    : public ppc::util::BaseRunFuncTests<InType, OutType, TestType> {
  public:
   static std::string PrintTestParam(const TestType &test_param) {
     return std::get<1>(test_param);
@@ -88,15 +89,17 @@ const std::array<TestType, 20> kTestParam = {
                    "boundary_values_large")};
 
 const auto kTestTasksList = std::tuple_cat(
-    ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecMPI, InType>(kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec),
-    ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecSEQ, InType>(kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec));
-
+    ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecMPI, InType>(
+        kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec),
+    ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecSEQ, InType>(
+        kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec));
 const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
-const auto kPerfTestName =
-    AlekseevAMinDistNeighElemVecRunFuncTestsProcesses::PrintFuncTestName<AlekseevAMinDistNeighElemVecRunFuncTestsProcesses>;
+const auto kPerfTestName = AlekseevAMinDistNeighElemVecRunFuncTestsProcesses::
+    PrintFuncTestName<AlekseevAMinDistNeighElemVecRunFuncTestsProcesses>;
 
-INSTANTIATE_TEST_SUITE_P(MinNeighDiffTests, AlekseevAMinDistNeighElemVecRunFuncTestsProcesses, kGtestValues, kPerfTestName);
+INSTANTIATE_TEST_SUITE_P(MinNeighDiffTests, AlekseevAMinDistNeighElemVecRunFuncTestsProcesses,
+                         kGtestValues, kPerfTestName);
 
 }  // namespace
 
