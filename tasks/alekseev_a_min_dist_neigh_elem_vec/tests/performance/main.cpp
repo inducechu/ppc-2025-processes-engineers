@@ -36,7 +36,6 @@ TEST_P(AlekseevAMinDistNeighElemVecRunPerfTestProcesses, RunPerfModes) {
   ExecuteTest(GetParam());
 }
 
-
 const auto kAllPerfTasks =
     ppc::util::MakeAllPerfTasks<InType, AlekseevAMinDistNeighElemVecMPI, AlekseevAMinDistNeighElemVecSEQ>(
         PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec);
