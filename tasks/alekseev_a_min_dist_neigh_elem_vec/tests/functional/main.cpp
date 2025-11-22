@@ -44,8 +44,7 @@ class AlekseevAMinDistNeighElemVecRunFuncTestsProcesses
     }
 
     auto [first, second] = output_data;
-    return std::cmp_equal(first, index) &&
-           std::cmp_equal(second, index + 1);
+    return std::cmp_equal(first, index) && std::cmp_equal(second, index + 1);
   }
 
   InType GetTestInputData() final {
@@ -79,27 +78,26 @@ const std::array<TestType, 20> kTestParam = {
     std::make_tuple(std::vector<int>{1, 100, 2, 101}, "one_large_diff_one_small"),
     std::make_tuple(std::vector<int>{0, 1, -1, 2}, "around_zero_values"),
     std::make_tuple(std::vector<int>{1, 4, 2, 5, 3}, "alternating_pattern"),
-    std::make_tuple(std::vector<int>{1,100,102}, "3_elem"),
+    std::make_tuple(std::vector<int>{1, 100, 102}, "3_elem"),
     std::make_tuple(std::vector<int>{4231, 1876, 9542, 6321, 2897, 7456, 1123, 5987, 8642, 3254, 7012,
                                      4589, 2398, 8765, 5432, 1678, 7890, 3456, 9123, 6789, 2345, 8210},
-                   "large_numbers_varied"),
+                    "large_numbers_varied"),
     std::make_tuple(std::vector<int>{1000, 9000, 2000, 8000, 3000, 7000, 4000, 6000, 5000, 8500},
-                   "alternating_jumps_large"),
-    std::make_tuple(std::vector<int>{9999, 1, 8888, 123, 7777, 456, 6666, 789, 5555, 10000},
-                   "boundary_values_large")};
+                    "alternating_jumps_large"),
+    std::make_tuple(std::vector<int>{9999, 1, 8888, 123, 7777, 456, 6666, 789, 5555, 10000}, "boundary_values_large")};
 
-const auto kTestTasksList = std::tuple_cat(
-    ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecMPI, InType>(
-        kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec),
-    ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecSEQ, InType>(
-        kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec));
+const auto kTestTasksList = std::tuple_cat(ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecMPI, InType>(
+                                               kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec),
+                                           ppc::util::AddFuncTask<AlekseevAMinDistNeighElemVecSEQ, InType>(
+                                               kTestParam, PPC_SETTINGS_alekseev_a_min_dist_neigh_elem_vec));
+
 const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
-const auto kPerfTestName = AlekseevAMinDistNeighElemVecRunFuncTestsProcesses::
-    PrintFuncTestName<AlekseevAMinDistNeighElemVecRunFuncTestsProcesses>;
+const auto kPerfTestName = AlekseevAMinDistNeighElemVecRunFuncTestsProcesses::PrintFuncTestName<
+    AlekseevAMinDistNeighElemVecRunFuncTestsProcesses>;
 
-INSTANTIATE_TEST_SUITE_P(MinNeighDiffTests, AlekseevAMinDistNeighElemVecRunFuncTestsProcesses,
-                         kGtestValues, kPerfTestName);
+INSTANTIATE_TEST_SUITE_P(MinNeighDiffTests, AlekseevAMinDistNeighElemVecRunFuncTestsProcesses, kGtestValues,
+                         kPerfTestName);
 
 }  // namespace
 
