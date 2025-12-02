@@ -39,7 +39,7 @@
 **Реализация на C++:**
 
 ```cpp
-int index = 0;
+int index = -1;
 int index_value = std::numeric_limits<int>::max();
 for(int i = 0; i < static_cast<int>(vec.size()) - 1; i++){
   int value = std::abs(vec[i] - vec[i + 1]);
@@ -52,25 +52,61 @@ for(int i = 0; i < static_cast<int>(vec.size()) - 1; i++){
 ## 4. Схема распараллеливания (MPI)
 **Алгоритм параллельного вычисления:**
 Аналогично, с некоторыми дополнениями 
-1. **Каждый процесс начинает с начальным шагом равным его рангу в цикле и двигается со step = кол-во процессов:** `for(int i = rank; i < static_cast<int>(vec.size()) - 1; i += comm_size)`.
+1. **Каждый процесс идет по своему пуллу ресурсов**.
 2. **Каждый процесс ищет свой минимум в его ресурсах**.
 3. **Глобальная длина формируется из минимумов каждого локального минимума процесса:** `MPI_Allreduce(&local_dist, &global_dist, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);`.
 4. **Финальный расчет: также при одинаковых минимальных дистанциях ищем по минимальному индексу** `MPI_Allreduce(&global_index, &finish_global_index, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);`
 **Принцип разделения отрезков:**
 ```cpp
-for(int i = rank; i < static_cast<int>(vec.size()) - 1; i += comm_size){
-  int value = std::abs(vec[i] - vec[i + 1]);
-  if(local_dist > value){
-    local_dist = value;
-    local_index = i;
+bool AlekseevAMinDistNeighElemVecMPI::RunImpl() {
+  int rank = 0;
+  int comm_size = 0;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+
+  const auto &vec = GetInput();
+  int total_size = static_cast<int>(vec.size());
+
+  if (total_size < 2) {
+    GetOutput() = std::make_tuple(-1, -1);
+    return true;
   }
+
+  std::vector<int> displacements;
+  std::vector<int> send_counts = CalculateSendCountsAndDisplacements(total_size, comm_size, displacements);
+
+  int my_chunk_size = send_counts[rank];
+  std::vector<int> local_data(my_chunk_size);
+
+  MPI_Scatterv(vec.data(), send_counts.data(), displacements.data(), MPI_INT, local_data.data(), my_chunk_size, MPI_INT,
+               0, MPI_COMM_WORLD);
+
+  std::vector<int> prev_elements = CalculatePrevElements(rank, comm_size, vec, displacements);
+
+  int my_prev_element = 0;
+  MPI_Scatter(prev_elements.data(), 1, MPI_INT, &my_prev_element, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+  auto [local_min_dist, local_min_index] =
+      FindLocalMinDistance(local_data, my_chunk_size, rank, my_prev_element, displacements);
+
+  int global_min_dist = std::numeric_limits<int>::max();
+  MPI_Allreduce(&local_min_dist, &global_min_dist, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);
+
+  int candidate_index =
+      (local_min_dist == global_min_dist && local_min_index != -1) ? local_min_index : std::numeric_limits<int>::max();
+
+  int global_min_index = std::numeric_limits<int>::max();
+  MPI_Allreduce(&candidate_index, &global_min_index, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);
+
+  GetOutput() = std::make_tuple(global_min_index - 1, global_min_index);
+  return true;
 }
 ```
 
 **Схема распределения вычислений:**
-- Процесс 0: обрабатывает отрезки 0, size, 2×size, ...
-- Процесс 1: обрабатывает отрезки 1, size+1, 2×size+1, ...
-- Процесс k: обрабатывает отрезки k, size+k, 2×size+k, ...
+- Процесс 0: обрабатывает отрезки base_chunk * rank, base_chunk * rank + base_chunk, ...
+- Процесс 1: обрабатывает отрезки base_chunk * rank, base_chunk * rank + base_chunk, ...
+- Процесс k: обрабатывает отрезки base_chunk * rank, base_chunk * rank + base_chunk, ...
 
 ## 5. Детали реализации
 ### 5.1. Структура реализации
@@ -148,9 +184,9 @@ alekseev_a_min_dist_neigh_elem_vec
 
 | **Режим** | **Количество процессов** | **Время, с** | **Speedup** | **Efficiency** |
 |-----------|--------------------------|--------------|-------------|----------------|
-| SEQ       | 1                        | 0.193        | 1.00        | N/A            |
-| MPI       | 2                        | 0.114        | 1.69        | 84,5%          |
-| MPI       | 4                        | 0.056        | 3.44        | 86%            |
+| SEQ       | 1                        | 0.541        | 1.00        | N/A            |
+| MPI       | 2                        | 0.278        | 1.94        | 97%            |
+| MPI       | 4                        | 0.226        | 2.39        | 60%            |
 
 ## 8. Заключение
 В рамках данной работы были успешно реализованы алгоритмы нахождения наиболее близких соседних элементов вектора. Проведенные эксперименты подтвердили значительное ускорение MPI-реализации и корректность работы обоих вариантов алгоритма.

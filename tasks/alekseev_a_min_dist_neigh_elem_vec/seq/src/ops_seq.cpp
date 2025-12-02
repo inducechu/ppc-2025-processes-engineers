@@ -12,7 +12,7 @@ namespace alekseev_a_min_dist_neigh_elem_vec {
 AlekseevAMinDistNeighElemVecSEQ::AlekseevAMinDistNeighElemVecSEQ(const InType &in) {
   SetTypeOfTask(GetStaticTypeOfTask());
   GetInput() = in;
-  GetOutput() = std::make_tuple(0, 0);
+  GetOutput() = std::make_tuple(-1, -1);
 }
 
 bool AlekseevAMinDistNeighElemVecSEQ::ValidationImpl() {
@@ -26,7 +26,12 @@ bool AlekseevAMinDistNeighElemVecSEQ::PreProcessingImpl() {
 bool AlekseevAMinDistNeighElemVecSEQ::RunImpl() {
   const auto &vec = GetInput();
 
-  int index = 0;
+  int total_size = static_cast<int>(vec.size());
+  if (total_size < 2) {
+    GetOutput() = std::make_tuple(-1, -1);
+    return true;
+  }
+  int index = -1;
   int index_value = std::numeric_limits<int>::max();
   for (int i = 0; i < static_cast<int>(vec.size()) - 1; i++) {
     int value = std::abs(vec[i] - vec[i + 1]);

@@ -33,7 +33,12 @@ class AlekseevAMinDistNeighElemVecRunFuncTestsProcesses
   bool CheckTestOutputData(OutType &output_data) final {
     const auto &vec = input_data_;
 
-    int index = 0;
+    int total_size = static_cast<int>(vec.size());
+    if (total_size < 2) {
+      return true;
+    }
+
+    int index = -1;
     int index_value = std::numeric_limits<int>::max();
     for (int i = 0; i < (static_cast<int>(vec.size()) - 1); i++) {
       int value = std::abs(vec[i + 1] - vec[i]);
