@@ -127,7 +127,7 @@ class AlekseevACustomReduceRunFuncTestsProcesses : public ppc::util::BaseRunFunc
         break;
       }
       case 19: {
-        input_data_.data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
+        input_data_.data = {1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0,  10.0,
                             11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0};
         expected_ = 210.0;
         break;
@@ -161,26 +161,16 @@ TEST_P(AlekseevACustomReduceRunFuncTestsProcesses, ReduceBasicCases) {
 }
 
 const std::array<TestType, 20> kTestParam = {
-    std::make_tuple(0, "sum_1_to_5"),
-    std::make_tuple(1, "mixed_integers"),
-    std::make_tuple(2, "single_number"),
-    std::make_tuple(3, "ten_numbers_sequence"),
-    std::make_tuple(4, "all_zeros"),
-    std::make_tuple(5, "all_same_positive"),
-    std::make_tuple(6, "all_same_negative"),
-    std::make_tuple(7, "opposite_pairs"),
-    std::make_tuple(8, "small_fractions"),
-    std::make_tuple(9, "mixed_fractions"),
-    std::make_tuple(10, "odd_numbers"),
-    std::make_tuple(11, "even_numbers"),
-    std::make_tuple(12, "triangular_numbers"),
-    std::make_tuple(13, "multiples_of_5"),
-    std::make_tuple(14, "prime_numbers"),
-    std::make_tuple(15, "powers_of_two"),
-    std::make_tuple(16, "random_pattern_1"),
-    std::make_tuple(17, "random_pattern_2"),
-    std::make_tuple(18, "more_fractions"),
-    std::make_tuple(19, "twenty_numbers"),
+    std::make_tuple(0, "sum_1_to_5"),          std::make_tuple(1, "mixed_integers"),
+    std::make_tuple(2, "single_number"),       std::make_tuple(3, "ten_numbers_sequence"),
+    std::make_tuple(4, "all_zeros"),           std::make_tuple(5, "all_same_positive"),
+    std::make_tuple(6, "all_same_negative"),   std::make_tuple(7, "opposite_pairs"),
+    std::make_tuple(8, "small_fractions"),     std::make_tuple(9, "mixed_fractions"),
+    std::make_tuple(10, "odd_numbers"),        std::make_tuple(11, "even_numbers"),
+    std::make_tuple(12, "triangular_numbers"), std::make_tuple(13, "multiples_of_5"),
+    std::make_tuple(14, "prime_numbers"),      std::make_tuple(15, "powers_of_two"),
+    std::make_tuple(16, "random_pattern_1"),   std::make_tuple(17, "random_pattern_2"),
+    std::make_tuple(18, "more_fractions"),     std::make_tuple(19, "twenty_numbers"),
 };
 
 const auto kTestTasksList = std::tuple_cat(

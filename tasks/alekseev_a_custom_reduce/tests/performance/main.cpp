@@ -10,8 +10,7 @@
 
 namespace alekseev_a_custom_reduce {
 
-class AlekseevACustomReduceRunPerfTestsProcesses 
-    : public ppc::util::BaseRunPerfTests<InType, OutType> {
+class AlekseevACustomReduceRunPerfTestsProcesses : public ppc::util::BaseRunPerfTests<InType, OutType> {
  public:
   void SetUp() override {
     constexpr int kDataSize = 70'000'000;
@@ -19,9 +18,9 @@ class AlekseevACustomReduceRunPerfTestsProcesses
 
     input_data_.root = 0;
     input_data_.data.resize(kDataSize);
-    
+
     expected_ = 0.0;
-    
+
     for (int i = 0; i < kDataSize; ++i) {
       double value = static_cast<double>(i) * kMultiplier;
       input_data_.data[i] = value;
@@ -53,17 +52,12 @@ TEST_P(AlekseevACustomReduceRunPerfTestsProcesses, RunPerfModes) {
   ExecuteTest(GetParam());
 }
 
-const auto kAllPerfTasks = 
-    ppc::util::MakeAllPerfTasks<InType, AlekseevACustomReduceMPI, AlekseevACustomReduceSEQ>(
-        PPC_SETTINGS_alekseev_a_custom_reduce);
+const auto kAllPerfTasks = ppc::util::MakeAllPerfTasks<InType, AlekseevACustomReduceMPI, AlekseevACustomReduceSEQ>(
+    PPC_SETTINGS_alekseev_a_custom_reduce);
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 const auto kPerfTestName = AlekseevACustomReduceRunPerfTestsProcesses::CustomPerfTestName;
 
-INSTANTIATE_TEST_SUITE_P(
-    RunModeTests, 
-    AlekseevACustomReduceRunPerfTestsProcesses, 
-    kGtestValues, 
-    kPerfTestName);
+INSTANTIATE_TEST_SUITE_P(RunModeTests, AlekseevACustomReduceRunPerfTestsProcesses, kGtestValues, kPerfTestName);
 
 }  // namespace alekseev_a_custom_reduce

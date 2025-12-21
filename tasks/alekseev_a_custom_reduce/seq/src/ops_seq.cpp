@@ -30,7 +30,7 @@ bool AlekseevACustomReduceSEQ::RunImpl() {
   const auto &input = GetInput().data;
   double result = 0.0;
   int sz = static_cast<int>(input.size());
-  for(auto i = 0; i < sz; i++){
+  for (auto i = 0; i < sz; i++) {
     result += input[i];
   }
   GetOutput() = result;
