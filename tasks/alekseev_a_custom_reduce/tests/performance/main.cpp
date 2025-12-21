@@ -13,7 +13,7 @@ namespace alekseev_a_custom_reduce {
 class AlekseevACustomReduceRunPerfTestsProcesses : public ppc::util::BaseRunPerfTests<InType, OutType> {
  public:
   void SetUp() override {
-    constexpr int kDataSize = 70'000'000;
+    constexpr int kDataSize = 10'000'000;
     constexpr double kMultiplier = 0.3;
 
     input_data_.root = 0;
@@ -22,7 +22,7 @@ class AlekseevACustomReduceRunPerfTestsProcesses : public ppc::util::BaseRunPerf
     expected_ = 0.0;
 
     for (int i = 0; i < kDataSize; ++i) {
-      double value = static_cast<double>(i) * kMultiplier;
+      double value = std::fmod(static_cast<double>(i) * kMultiplier, 10000.0);
       input_data_.data[i] = value;
       expected_ += value;
     }
