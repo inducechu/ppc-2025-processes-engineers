@@ -41,9 +41,9 @@ double SimpleQuadratic(double x, double y) {
 }
 
 double BoothFunc(double x, double y) {
-  const double t1 = x + 2.0 * y - 7.0;
-  const double t2 = 2.0 * x + y - 5.0;
-  return t1 * t1 + t2 * t2;
+  const double t1 = x + (2.0 * y) - 7.0;
+  const double t2 = (2.0 * x) + y - 5.0;
+  return (t1 * t1) + (t2 * t2);
 }
 
 }  // namespace
