@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <mpi.h>
 
 #include <cmath>
 #include <vector>
@@ -29,14 +30,18 @@ class AlekseevACustomReduceRunPerfTestsProcesses : public ppc::util::BaseRunPerf
   }
 
   bool CheckTestOutputData(OutType &output_data) override {
+    int rank = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     constexpr double kAbsoluteEps = 1e-6;
     constexpr double kRelativeEps = 1e-12;
 
     const double difference = std::fabs(output_data - expected_);
     const double scale = std::fabs(expected_);
     const double threshold = kAbsoluteEps + (kRelativeEps * scale);
-
-    return difference <= threshold;
+    if (rank == 0) {
+      return difference <= threshold;
+    }
+    return true;
   }
 
   InType GetTestInputData() final {

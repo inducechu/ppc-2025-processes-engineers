@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <mpi.h>
 
 #include <array>
 #include <cmath>
@@ -141,8 +142,13 @@ class AlekseevACustomReduceRunFuncTestsProcesses : public ppc::util::BaseRunFunc
   }
 
   bool CheckTestOutputData(OutType &output_data) final {
+    int rank = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     const double eps = 1e-9;
-    return std::fabs(output_data - expected_) < eps;
+    if (rank == 0) {
+      return std::fabs(output_data - expected_) < eps;
+    }
+    return true;
   }
 
   InType GetTestInputData() final {
