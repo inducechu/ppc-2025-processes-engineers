@@ -166,8 +166,6 @@ bool AlekseevACustomReduceMPI::RunImpl() {
 
   if (world_rank_ == root_) {
     GetOutput() = global_sum;
-  } else {
-    GetOutput() = 0.0;
   }
 
   return true;
