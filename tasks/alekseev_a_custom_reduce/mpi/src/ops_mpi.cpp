@@ -164,20 +164,10 @@ bool AlekseevACustomReduceMPI::RunImpl() {
     return false;
   }
 
-  constexpr int kResultTag = 1;
-
   if (world_rank_ == root_) {
     GetOutput() = global_sum;
-
-    for (int dest = 0; dest < world_size_; ++dest) {
-      if (dest != root_) {
-        MPI_Send(&global_sum, 1, MPI_DOUBLE, dest, kResultTag, MPI_COMM_WORLD);
-      }
-    }
   } else {
-    MPI_Status status;
-    MPI_Recv(&global_sum, 1, MPI_DOUBLE, root_, kResultTag, MPI_COMM_WORLD, &status);
-    GetOutput() = global_sum;
+    GetOutput() = 0.0;
   }
 
   return true;
