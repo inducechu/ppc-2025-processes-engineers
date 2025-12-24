@@ -25,7 +25,7 @@ double HimmelblauFunc(double x, double y) {
 double RastriginFunc(double x, double y) {
   constexpr double kA = 10.0;
   constexpr double kTwoPi = 6.2831853071795864769;
-  return (2.0 * kA) + ((x * x) - (kA * std::cos(kTwoPi * x))) + ((y * y) - (A * std::cos(kTwoPi * y)));
+  return (2.0 * kA) + ((x * x) - (kA * std::cos(kTwoPi * x))) + ((y * y) - (kA * std::cos(kTwoPi * y)));
 }
 
 double SphereFunc(double x, double y) {
