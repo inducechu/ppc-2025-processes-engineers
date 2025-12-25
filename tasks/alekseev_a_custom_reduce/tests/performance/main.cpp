@@ -30,8 +30,13 @@ class AlekseevACustomReduceRunPerfTestsProcesses : public ppc::util::BaseRunPerf
   }
 
   bool CheckTestOutputData(OutType &output_data) override {
+    int initialized = 0;
+    const int mpi_ok = MPI_Initialized(&initialized);
+
     int rank = 0;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if ((mpi_ok == MPI_SUCCESS) && (initialized != 0)) {
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    }
     constexpr double kAbsoluteEps = 1e-6;
     constexpr double kRelativeEps = 1e-12;
 

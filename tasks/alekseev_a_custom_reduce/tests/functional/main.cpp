@@ -142,8 +142,13 @@ class AlekseevACustomReduceRunFuncTestsProcesses : public ppc::util::BaseRunFunc
   }
 
   bool CheckTestOutputData(OutType &output_data) final {
+    int initialized = 0;
+    const int mpi_ok = MPI_Initialized(&initialized);
+
     int rank = 0;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if ((mpi_ok == MPI_SUCCESS) && (initialized != 0)) {
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    }
     const double eps = 1e-9;
     if (rank == 0) {
       return std::fabs(output_data - expected_) < eps;
